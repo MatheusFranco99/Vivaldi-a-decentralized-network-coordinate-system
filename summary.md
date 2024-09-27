@@ -1,5 +1,6 @@
 # Summary (with questions)
 
+## Introduction
 - What is the paper contribution?
     - The paper proposes an algorithm that predicts Internet latencies with low error. The algorithm is fully decentralized and adds low overhead.
 - Vivaldi uses synthetic coordinates. What are these coordinates and what they are used for?
@@ -10,6 +11,8 @@
     - It adds no extra network communication, relying on the application’s existing communication, making it scalable.
     - It easily adapts to changes in the network condition.
     - It handles nodes with high-error samples.
+
+## The algorithm
 - Describe the algorithm’s components.
     - Each node host in the network is assigned to a synthetic coordinate.
     - Then, the algorithm attempts to update the coordinates such that an error function is minimized.
@@ -28,6 +31,8 @@
     - So, whenever a node receives a new RTT, it updates its current coordinates by: $x_i = x_i + \delta \times (RTT - ||x_i - x_j || ) \times u(x_i-x_j)$
     - For default, all nodes start on the same location. To avoid the problem of being stuck on the initial configuration, it defines $u(0)$ to be a random unit-length vector, so that nodes can push themselves apart.
     - Notice that the algorithm is biased to the newest samples. We could avoid it by maintaining a list of samples. But this incurs the issue of the samples being outdated and requiring more memory for larger systems.
+
+## Hyper parameters
 - Analyse the $\delta$ hyperparameter.
     - The rate of convergence is dependent on the $\delta$ parameter. Larger $\delta$ causes faster changes, but if it’s too large, it may keep jumping back and forth.
     - A good approach is to vary it according to the certainty of the coordinates.
@@ -38,6 +43,8 @@
 - How Vivaldi computes the accuracy of its own (local) estimation and the accuracy of other nodes?
     - To do it, it may maintain a list of RTT samples and compute the relative errors of new samples against a moving average.
     - More It’s a future work to derive a better predictor.
+
+## Evaluation
 - Regarding evaluation, what were the best values for $\delta$ and $c_c$ empirically found?
     - For a fixed $\delta$, 0.001 seemed to slow, 1.0 made it jump back and forth, and 0.01 showed the best stable result.
     - Using an adaptive $\delta$, $c_c$ with 0.25 showed the best result iwth quick error reduction and low oscillation.
@@ -55,6 +62,8 @@
 - How Vivaldi improves with the number of neighbours?
     - It seems that collecting samples from nearby nodes improve the prediction accuracy.
     - Also, the number of neighbours also affect the accuracy. The performance improved until 32 neighbours, after which it didn’t improve much.
+
+## Coordinat space system
 - Regarding coordinate space systems, why no system can be ideal?
     - Almost any coordinate space one may consider will respect the triangle inequality.
     - But that’s not a rule in practice. It can happen that some nodes violate the inequality.
@@ -77,6 +86,8 @@
 - How the height vector deals with dependent regions?
     - The paper showed an example of Brazilian nodes that send their traffic through the United States.
     - With the height vector, these Brazilian nodes ended up in the United States region, but 95ms (the delay from Brazil to the US) above it.
+
+## Related and future work
 - What is an important difference between PIC and Vivaldi?
     - Both PIC and Vivaldi are decentralized. But, while Vivaldi is robust to high error nodes, PIC is robust to malicious participants through a test based on the triangle inequality.
     - Also, PIC is built on top of a discovery protocol, and it can use such protocol to get RTT samples.
