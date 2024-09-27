@@ -63,7 +63,7 @@
     - It seems that collecting samples from nearby nodes improve the prediction accuracy.
     - Also, the number of neighbours also affect the accuracy. The performance improved until 32 neighbours, after which it didn’t improve much.
 
-## Coordinat space system
+## Coordinate space system
 - Regarding coordinate space systems, why no system can be ideal?
     - Almost any coordinate space one may consider will respect the triangle inequality.
     - But that’s not a rule in practice. It can happen that some nodes violate the inequality.
